@@ -26,20 +26,20 @@ router.post("/signin", async(req,res) =>{
     try {
         const user =  await User.findOne ({email: req.body.email});
         if (!user){
-            res.status(200).json({message:"this email dosen't exist, please sign up first"});
+            return res.status(200).json({message:"this email dosen't exist, please sign up first"});
         }
         const isPasswordcorrect = bcrypt.compareSync(
             req.body.password, 
             user.password
         );
         if (!isPasswordcorrect){
-            res.status(401).json({message:"password is not correct"})
+            return res.status(200).json({message:"password is not correct"})
         }
         const {password, ...others} = user._doc;
         res.status(200).json({ others })
     } catch (error) {
     console.error("Error during sign in:", error);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    return res.status(500).json({ message: "Server Error", error: error.message });
     };
 });
 module.exports = router;
